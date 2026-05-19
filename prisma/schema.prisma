@@ -1,0 +1,62 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Get a free hosted Postgres database in seconds: `npx create-db`
+
+generator client {
+  provider = "prisma-client-js"
+  output   = "../src/generated/prisma"
+}
+
+datasource db {
+  provider = "postgresql"
+  schemas = ["users_schema", "academic_schema"]
+}
+
+// Define los modelos para perfiles de usuario 
+model Student {
+  student_id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id String @unique @db.Uuid
+  parent_id String @db.Uuid
+  id_section String   
+  createdAt DateTime @default(now())
+
+  // Relación con padres (muchos a uno)
+  parent Parent @relation(fields: [parent_id], references: [parent_id])
+  //Esquema al que pertenece el modelo
+  @@schema("users_schema")
+}
+
+model Parent {
+  parent_id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id String @unique @db.Uuid
+  phone String @unique
+  occupation String
+  createdAt DateTime @default(now())
+
+  // Relación con estudiantes (uno a muchos)
+  students Student[]
+
+  //Esquema al que pertenece el modelo
+  @@schema("users_schema")
+}
+
+model Teacher {
+  teacher_id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id String @unique @db.Uuid
+  speciality String
+  createdAt DateTime @default(now())
+
+  //Esquema al que pertenece el modelo
+  @@schema("users_schema")
+}
+
+
+model Admin {
+  admin_id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  createdAt DateTime @default(now())
+
+  //Esquema al que pertenece el modelo
+  @@schema("users_schema")
+}
+
