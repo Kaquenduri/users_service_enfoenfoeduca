@@ -51,6 +51,16 @@ model Teacher {
   @@schema("users_schema")
 }
 
+model Director {
+  director_id String @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
+  user_id String @unique @db.Uuid
+  speciality String
+  createdAt DateTime @default(now())
+
+  //Esquema al que pertenece el modelo
+  @@schema("users_schema")
+}
+
 
 model Admin {
   admin_id        String   @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
