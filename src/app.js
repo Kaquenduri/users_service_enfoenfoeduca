@@ -6,6 +6,8 @@ import 'dotenv/config';
 import studentRoutes from './routes/student.crud.routes.js';
 import teacherRoutes from './routes/teacher.crud.routes.js';
 import parentRoutes from './routes/parent.crud.routes.js';
+import directorRoutes from './routes/director.crud.routes.js';
+
 import { apiLimiter } from './middleware/rate_limit.js';
 
 dotenv.config();
@@ -21,6 +23,7 @@ app.use(apiLimiter);
 app.use('/students', studentRoutes);
 app.use('/teachers', teacherRoutes);
 app.use('/parents', parentRoutes);
+app.use('/directors', directorRoutes);
 
 const PORT = process.env.PORT || 3002;
 
