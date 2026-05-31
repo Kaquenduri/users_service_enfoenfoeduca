@@ -68,7 +68,28 @@ export const getParents = async (req, res) => {
       }
     });
 
-    res.json(parents);
+    const resultado = await Promise.all(
+      parents.map(async (parent) =>{
+        const response = await fetch(
+          //Obtiene los datos del usuario desde el Auth Service usando el user_id del estudiante
+          process.env.AUTH_SERVICE_URL + `/auth/users/${parent.user_id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+
+        const dataUser = await response.json();
+        return {
+          ...parent,
+          user_id: dataUser
+        }
+      })
+    )
+
+    res.json(resultado);
 
   } catch (error) {
 
@@ -92,6 +113,23 @@ export const getParentById = async (req, res) => {
         students: true
       }
     });
+    // Hace una solicitud al Auth Service para obtener los datos del usuario usando el user_id del padre
+    const responseUserAuth = await fetch(
+      process.env.AUTH_SERVICE_URL + `/auth/users/${parent.user_id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    // IObtenemos los datos del usuario desde el Auth Service
+    const dataUser = await responseUserAuth.json();
+    // Creamos un nuevo objeto que combina la información del padre con la información del usuario
+    const response = {
+      ...parent,
+      user_id: dataUser
+    }
 
     if (!parent) {
       return res.status(404).json({
@@ -99,7 +137,7 @@ export const getParentById = async (req, res) => {
       });
     }
 
-    res.json(parent);
+    res.json(response);
 
   } catch (error) {
 

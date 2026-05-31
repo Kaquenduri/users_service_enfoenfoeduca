@@ -60,8 +60,28 @@ export const getDirectors = async (req, res) => {
   try {
     // Obtenemos todos los directores
     const directors = await prisma.director.findMany();
+    const resultado = await Promise.all(
+      directors.map(async (director) =>{
+        const response = await fetch(
+          //Obtiene los datos del usuario desde el Auth Service usando el user_id del director
+          process.env.AUTH_SERVICE_URL + `/auth/users/${director.user_id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
 
-    res.json(directors);
+        const dataUser = await response.json();
+        return {
+          ...director,
+          user_id: dataUser
+        }
+      })
+    )
+
+    res.json(resultado);
 
   } catch (error) {
     res.status(500).json({
@@ -79,6 +99,23 @@ export const getDirectorById = async (req, res) => {
         director_id: id // Cambiado a tu llave primaria director_id
       }
     });
+    // Hace una solicitud al Auth Service para obtener los datos del usuario usando el user_id del director
+    const responseUserAuth = await fetch(
+      process.env.AUTH_SERVICE_URL + `/auth/users/${director.user_id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    // Obtenemos los datos del usuario desde el Auth Service
+    const dataUser = await responseUserAuth.json();
+    // Creamos un nuevo objeto que combina la información del director con la información del usuario
+    const response = {
+      ...director,
+      user_id: dataUser
+    }
 
     if (!director) {
       return res.status(404).json({
@@ -86,7 +123,7 @@ export const getDirectorById = async (req, res) => {
       });
     }
 
-    res.json(director);
+    res.json(response);
 
   } catch (error) {
     res.status(500).json({

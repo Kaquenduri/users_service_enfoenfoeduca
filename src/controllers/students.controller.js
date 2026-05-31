@@ -61,14 +61,36 @@ export const createStudent = async (req, res) => {
 
 export const getStudents = async (req, res) => {
   try {
-
+    
+    // Trae todos los estudiantes con su información de padre de SUPABASE
     const students = await prisma.student.findMany({
       include: {
         parent: true
       }
     });
 
-    res.json(students);
+    const resultado = await Promise.all(
+      students.map(async (student) =>{
+        const response = await fetch(
+          //Obtiene los datos del usuario desde el Auth Service usando el user_id del estudiante
+          process.env.AUTH_SERVICE_URL + `/auth/users/${student.user_id}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+
+        const dataUser = await response.json();
+        return {
+          ...student,
+          user_id: dataUser
+        }
+      })
+    )
+
+    res.json(resultado);
 
   } catch (error) {
 
@@ -93,13 +115,31 @@ export const getStudentById = async (req, res) => {
       }
     });
 
+    // Hace una solicitud al Auth Service para obtener los datos del usuario usando el user_id del estudiante
+    const responseUserAuth = await fetch(
+      process.env.AUTH_SERVICE_URL + `/auth/users/${student.user_id}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    // IObtenemos los datos del usuario desde el Auth Service
+    const dataUser = await responseUserAuth.json();
+    // Creamos un nuevo objeto que combina la información del estudiante con la información del usuario
+    const response = {
+      ...student,
+      user_id: dataUser
+    }
+
     if (!student) {
       return res.status(404).json({
         message: 'Student not found'
       });
     }
 
-    res.json(student);
+    res.json(response);
 
   } catch (error) {
 
