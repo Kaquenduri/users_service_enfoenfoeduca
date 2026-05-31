@@ -71,7 +71,8 @@ export const getStudents = async (req, res) => {
 
     const resultado = await Promise.all(
       students.map(async (student) =>{
-        const response = await fetch(
+
+        const responseUser = await fetch(
           //Obtiene los datos del usuario desde el Auth Service usando el user_id del estudiante
           process.env.AUTH_SERVICE_URL + `/auth/users/${student.user_id}`,
           {
@@ -81,11 +82,23 @@ export const getStudents = async (req, res) => {
             }
           }
         )
+        const dataUser = await responseUser.json();
 
-        const dataUser = await response.json();
+        const responseSection = await fetch(
+          process.env.ACADEMIC_SERVICE_URL + `/sections/${student.id_section}`,
+          {
+            method: 'GET',
+            headers: {
+              'Content-Type': 'application/json'
+            }
+          }
+        )
+        const dataSection = await responseSection.json();
+
         return {
           ...student,
-          user_id: dataUser
+          user_id: dataUser,
+          id_section: dataSection
         }
       })
     )
@@ -127,10 +140,24 @@ export const getStudentById = async (req, res) => {
     )
     // IObtenemos los datos del usuario desde el Auth Service
     const dataUser = await responseUserAuth.json();
+
+    const responseSection = await fetch(
+      process.env.ACADEMIC_SERVICE_URL + `/sections/${student.id_section}`,
+      {
+        method: 'GET',
+        headers: {
+          'Content-Type': 'application/json'
+        }
+      }
+    )
+    const dataSection = await responseSection.json();
+    
+    
     // Creamos un nuevo objeto que combina la información del estudiante con la información del usuario
     const response = {
       ...student,
-      user_id: dataUser
+      user_id: dataUser,
+      id_section: dataSection
     }
 
     if (!student) {
