@@ -61,7 +61,9 @@ export const createStudent = async (req, res) => {
 
 export const getStudents = async (req, res) => {
   try {
-    
+    //Obtiene el token para autenticar la solicitud al Auth Service y Academic Service
+    const tokenJWT = req.headers.authorization;
+
     // Trae todos los estudiantes con su información de padre de SUPABASE
     const students = await prisma.student.findMany({
       include: {
@@ -89,7 +91,8 @@ export const getStudents = async (req, res) => {
           {
             method: 'GET',
             headers: {
-              'Content-Type': 'application/json'
+              'Content-Type': 'application/json',
+              'Authorization': tokenJWT
             }
           }
         )
@@ -116,6 +119,8 @@ export const getStudents = async (req, res) => {
 
 export const getStudentById = async (req, res) => {
   try {
+    //Obtiene el token para autenticar la solicitud al Auth Service y Academic Service
+    const tokenJWT = req.headers.authorization;
 
     const { id } = req.params;
 
@@ -146,7 +151,8 @@ export const getStudentById = async (req, res) => {
       {
         method: 'GET',
         headers: {
-          'Content-Type': 'application/json'
+          'Content-Type': 'application/json',
+          'Authorization': tokenJWT
         }
       }
     )
