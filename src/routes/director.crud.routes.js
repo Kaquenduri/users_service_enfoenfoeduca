@@ -6,7 +6,7 @@ import {
     getDirectorById,
     updateDirector,
     deleteDirector
-} from '../controllers/directors.controller.js'; // Cambiado al controlador de directores
+} from '../controllers/director.controller.js'; // Cambiado al controlador de directores
 
 import { verifyToken } from '../middleware/auth.middleware.js';
 import { authorizeRoles } from '../middleware/role.middleware.js';
