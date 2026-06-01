@@ -32,8 +32,6 @@ router.get(
 
 router.get(
   '/user/:id',
-  verifyToken,
-  authorizeRoles('ADMIN', 'TEACHER'),
   getParentByIdUser
 );
 
