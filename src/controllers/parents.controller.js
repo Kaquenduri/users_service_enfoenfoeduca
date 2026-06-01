@@ -148,6 +148,27 @@ export const getParentById = async (req, res) => {
   }
 };
 
+export const getParentByIdUser = async (req, res) => {
+  try{
+    const { id } = req.params;
+
+    const parent = await prisma.parent.findUnique({
+      where: {
+        user_id : id
+      },
+      include: {
+        students: true
+      }
+    });
+
+    res.json(parent);
+  }catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+}
+
 export const updateParent = async (req, res) => {
   try {
 

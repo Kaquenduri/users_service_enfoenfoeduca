@@ -4,6 +4,7 @@ import {
     createDirector,
     getDirectors,
     getDirectorById,
+    getParentByIdUser,
     updateDirector,
     deleteDirector
 } from '../controllers/director.controller.js'; // Cambiado al controlador de directores
@@ -27,6 +28,13 @@ router.get(
   verifyToken,
   authorizeRoles('ADMIN', 'TEACHER'),
   getDirectorById
+);
+
+router.get(
+  '/user/:id',
+  verifyToken,
+  authorizeRoles('ADMIN', 'TEACHER'),
+  getParentByIdUser
 );
 
 // Crear un nuevo director

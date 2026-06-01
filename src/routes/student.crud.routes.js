@@ -5,6 +5,7 @@ import {
   createStudent,
   updateStudent,
   getStudentById,
+  getStudentByIdUser,
   deleteStudent
 } from '../controllers/students.controller.js';
 
@@ -26,6 +27,13 @@ router.get(
   verifyToken,
   authorizeRoles('ADMIN', 'TEACHER'),
   getStudentById
+);
+
+router.get(
+  '/user/:id',
+  verifyToken,
+  authorizeRoles('ADMIN', 'TEACHER'),
+  getStudentByIdUser
 );
 
 router.post(

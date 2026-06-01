@@ -4,6 +4,7 @@ import {
     createTeacher,
     getTeachers,
     getTeacherById,
+    getTeacherByIdUser,
     updateTeacher,
     deleteTeacher
 } from '../controllers/teachers.controller.js';
@@ -26,6 +27,13 @@ router.get(
   verifyToken,
   authorizeRoles('ADMIN', 'TEACHER'),
   getTeacherById
+);
+
+router.get(
+  '/user/:id',
+  verifyToken,
+  authorizeRoles('ADMIN', 'TEACHER'),
+  getTeacherByIdUser
 );
 
 router.post(

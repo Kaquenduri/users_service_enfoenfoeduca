@@ -139,6 +139,23 @@ export const getTeacherById = async (req, res) => {
   }
 };
 
+export const getTeacherByIdUser = async (req, res) => {
+  try{
+    const { id } = req.params;
+
+    const teacher = await prisma.teacher.findUnique({
+      where: {
+        user_id : id
+      }
+    });
+
+    res.json(teacher);
+  }catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+}
 export const updateTeacher = async (req, res) => {
   try {
 

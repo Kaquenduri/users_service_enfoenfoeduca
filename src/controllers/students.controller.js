@@ -183,6 +183,27 @@ export const getStudentById = async (req, res) => {
   }
 };
 
+export const getStudentByIdUser = async (req, res) => {
+  try{
+    const { id } = req.params;
+
+    const student = await prisma.student.findUnique({
+      where: {
+        user_id : id
+      },
+      include: {
+        parent: true
+      }
+    });
+
+    res.json(student);
+  }catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+}
+
 export const updateStudent = async (req, res) => {
   try {
 

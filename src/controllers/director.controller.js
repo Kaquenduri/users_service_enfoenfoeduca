@@ -132,6 +132,24 @@ export const getDirectorById = async (req, res) => {
   }
 };
 
+export const getParentByIdUser = async (req, res) => {
+  try{
+    const { id } = req.params;
+
+    const director = await prisma.director.findUnique({
+      where: {
+        user_id : id
+      }
+    });
+
+    res.json(director);
+  }catch (error) {
+    res.status(500).json({
+      error: error.message
+    });
+  }
+}
+
 export const updateDirector = async (req, res) => {
   try {
     const { id } = req.params;

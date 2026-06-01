@@ -4,6 +4,7 @@ import {
     createParent,
     getParents,
     getParentById,
+    getParentByIdUser,
     updateParent,
     deleteParent
 } from '../controllers/parents.controller.js';
@@ -26,6 +27,13 @@ router.get(
   verifyToken,
   authorizeRoles('ADMIN', 'TEACHER'),
   getParentById
+);
+
+router.get(
+  '/user/:id',
+  verifyToken,
+  authorizeRoles('ADMIN', 'TEACHER'),
+  getParentByIdUser
 );
 
 router.post(
