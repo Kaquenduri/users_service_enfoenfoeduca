@@ -18,7 +18,7 @@ const router = Router();
 router.get(
   '/',
   verifyToken,
-  authorizeRoles('ADMIN', 'TEACHER'),
+  authorizeRoles('ADMIN', 'TEACHER','DIRECTOR'),
   getDirectors
 );
 
@@ -26,7 +26,7 @@ router.get(
 router.get(
   '/:id',
   verifyToken,
-  authorizeRoles('ADMIN', 'TEACHER'),
+  authorizeRoles('ADMIN', 'TEACHER','DIRECTOR'),
   getDirectorById
 );
 

@@ -18,14 +18,12 @@ const router = Router();
 router.get(
   '/',
   verifyToken,
-  authorizeRoles('ADMIN', 'TEACHER'),
   getParents
 );
 
 router.get(
   '/:id',
   verifyToken,
-  authorizeRoles('ADMIN', 'TEACHER'),
   getParentById
 );
 
