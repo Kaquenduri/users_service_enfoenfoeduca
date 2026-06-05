@@ -4,7 +4,7 @@ export const apiLimiter = rateLimit({
 
     windowMs: 15 * 60 * 1000,
 
-    max: 15000,
+    max: 5000,
 
     standardHeaders: true,
 
